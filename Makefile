@@ -5,7 +5,7 @@ build-release:
 .PHONY: install
 install:
 	cp target/release/wmd77 /usr/bin
-	cp -r /etc/xdg/* /etc/xdg/
+	cp -r etc/xdg/* /etc/xdg/
 	cp wmd77.desktop /usr/share/xsessions/
 
 .PHONY: uninstall
