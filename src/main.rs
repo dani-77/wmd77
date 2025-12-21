@@ -74,6 +74,7 @@ fn raw_key_bindings() -> HashMap<String, Box<dyn KeyEventHandler<RustConn>>> {
         "M-d" => spawn("dmenu_run"),
         "M-p" => spawn("scrot"),
         "M-r" => spawn("gmrun"),
+        "M-t" => spawn("slock"),
         "M-S-s" => log_current_state(),
         "M-Return" => spawn("st"),
         "M-S-q" => exit(),
@@ -152,9 +153,9 @@ fn main() -> Result<()> {
         padding: (2, 2),
     };
 
-    let bar = status_bar(BAR_HEIGHT_PX, FONT, 10, style, BLUE, GREY, Position::Top).unwrap();
+    let bar = status_bar(BAR_HEIGHT_PX, FONT, 12, style, BLUE, GREY, Position::Top).unwrap();
 
-   let wm = bar.add_to(WindowManager::new(
+    let wm = bar.add_to(WindowManager::new(
         config,
         key_bindings,
         mouse_bindings(),
