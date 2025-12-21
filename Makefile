@@ -11,8 +11,7 @@ install:
 .PHONY: clean install
 clean install:
 	rm -rf target
-	cargo build --release
-	
+
 .PHONY: uninstall
 uninstall:
 	rm /usr/bin/wmd77
