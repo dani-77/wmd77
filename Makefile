@@ -8,6 +8,17 @@ install:
 	cp -r etc/xdg/* /etc/xdg/
 	cp wmd77.desktop /usr/share/xsessions/
 
+.PHONY: clean install
+clean install:
+	rm /usr/bin/wmd77
+	rm -rf /etc/xdg/wmd77
+	rm /usr/share/xsessions/wmd77.desktop
+	rm -rf target
+	cargo build --release
+	cp target/release/wmd77 /usr/bin
+	cp -r etc/xdg/* /etc/xdg/
+	cp wmd77.desktop /usr/share/xsessions/
+
 .PHONY: uninstall
 uninstall:
 	rm /usr/bin/wmd77
