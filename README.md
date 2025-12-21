@@ -14,15 +14,21 @@ This is my Penrose based X11 Tiling Window Manager.
 
 ### Optional dependencies
 
+- dmenu
+
 - feh
 
-- xautolock
+- redshift
+
+- scrot
 
 - slock
 
-- xcompmgr
-
 - udiskie
+
+- xautolock
+
+- xcompmgr
 
 # Install
 
