@@ -2,6 +2,8 @@
 
 This is my Penrose based X11 Tiling Window Manager.
 
+[wmd77](wmd77.png?raw=true)
+
 ## Dependencies
 
 - cargo & rust
