@@ -32,6 +32,30 @@ To install just:
 make && sudo make install
 ```
 
+## Keybinds
+
+Eventhough you can swap any of it, by default:
+
+super + return -> st (terminal)
+
+super + a -> rofi
+
+super + d -> dmenu
+
+super + j/k -> swap focused window
+
+super + m -> change layout
+
+super + p -> scrot
+
+super + q -> kill focused window
+
+super + r -> gmrun
+
+super + x -> powermenu
+
+super + shift + q -> quit WM
+
 # Credits
 
 - Huge thanks to [sminez](https://github.com/sminez) for the fantastic Penrose Library, examples and HowTo videos in Youtube.
