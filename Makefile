@@ -4,7 +4,7 @@ build-release:
 
 .PHONY: install
 install:
-	cp target/release/wmd77 /usr/bin
+	cargo install --path=. --force --root=/usr
 	cp -r etc/xdg/* /etc/xdg/
 	cp wmd77.desktop /usr/share/xsessions/
 
