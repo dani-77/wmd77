@@ -48,6 +48,7 @@ const BLACK: u32 = 0x282828ff;
 const WHITE: u32 = 0xebdbb2ff;
 const GREY: u32 = 0x3c3836ff;
 const BLUE: u32 = 0x458588ff;
+const LAVENDER: u32 = 0xAA96DA;
 const BAR_HEIGHT_PX: u32 = 20;
 
 #[cfg(not(target_os = "macos"))]
@@ -140,7 +141,7 @@ fn main() -> Result<()> {
     // SpawnOnStartup is being used here to start polybar so that the EWMH support
     // can be demonstrated.
     let config = add_ewmh_hooks(Config {
-        focused_border: WHITE.into(),
+        focused_border: LAVENDER.into(),
         normal_border: GREY.into(),
         default_layouts: layouts(),
         startup_hook: Some(SpawnOnStartup::boxed("/etc/xdg/wmd77/startup.sh")),
