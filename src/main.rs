@@ -140,6 +140,8 @@ fn main() -> Result<()> {
     // SpawnOnStartup is being used here to start polybar so that the EWMH support
     // can be demonstrated.
     let config = add_ewmh_hooks(Config {
+        focused_border: WHITE.into(),
+        normal_border: GREY.into(),
         default_layouts: layouts(),
         startup_hook: Some(SpawnOnStartup::boxed("/etc/xdg/wmd77/startup.sh")),
         ..Config::default()
