@@ -34,19 +34,19 @@ This is my Penrose based X11 Tiling Window Manager.
 
 To build and use locally:
 
-```bash
+```
 $ make
 ```
 
 And then run the package:
 
-```bash
+```
 $ target/release/./wmd77
 ```
 
 To install:
 
-```bash
+```
 $ sudo make install
 ```
 
