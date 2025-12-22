@@ -30,12 +30,24 @@ This is my Penrose based X11 Tiling Window Manager.
 
 - xcompmgr
 
-# Install
+# Build / Install
 
-To install just:
+To build and use locally:
 
 ```
-make && sudo make install
+$ make
+```
+
+And then run the package:
+
+```
+$ target/release/./wmd77
+```
+
+To install:
+
+```
+$ sudo make install
 ```
 
 ## Keybinds
@@ -57,6 +69,8 @@ super + p -> scrot
 super + q -> kill focused window
 
 super + r -> gmrun
+
+super + t -> lock
 
 super + x -> powermenu
 
