@@ -3,6 +3,6 @@ Version=1.0
 Name=wmd77
 Comment=Use this session to run penrose as your desktop environment
 Exec=wmd77
-Icon=
+Icon=/usr/share/pixmaps/wmd77.png
 Type=Application
 DesktopNames=wmd77
