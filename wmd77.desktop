@@ -2,7 +2,7 @@
 Version=1.0
 Name=wmd77
 Comment=Use this session to run penrose as your desktop environment
-Exec=sh -c "wmd77 &> ~/.penrose.log"
+Exec=wmd77
 Icon=
 Type=Application
 DesktopNames=wmd77
