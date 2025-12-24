@@ -19,7 +19,7 @@ use penrose::{
             log_current_state, modify_with, send_layout_message, spawn,
         },
         layout::{
-            MainAndStack,
+            MainAndStack, Monocle, Grid,
             messages::{ExpandMain, IncMain, ShrinkMain},
             transformers::{Gaps, ReflectHorizontal, ReserveTop},
         },
@@ -125,7 +125,9 @@ pub fn layouts() -> LayoutStack {
     stack!(
         MainAndStack::side(max_main, ratio, ratio_step),
         ReflectHorizontal::wrap(MainAndStack::side(max_main, ratio, ratio_step)),
-        MainAndStack::bottom(max_main, ratio, ratio_step)
+        MainAndStack::bottom(max_main, ratio, ratio_step),
+        Monocle::boxed(),
+        Grid::boxed()
     )
     .map(|layout| ReserveTop::wrap(Gaps::wrap(layout, outer_px, inner_px), top_px))
 }
@@ -167,9 +169,4 @@ fn main() -> Result<()> {
 
     wm.run()
 
-}
-
-#[cfg(target_os = "macos")]
-fn main() -> Result<()> {
-    panic!("not supported on OSX");
 }
