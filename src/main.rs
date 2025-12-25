@@ -78,11 +78,11 @@ fn raw_key_bindings(
     for tag in &["1", "2", "3", "4", "5", "6", "7", "8", "9"] {
         raw_bindings.extend([
             (
-                format!("A-{tag}"),
+                format!("M-{tag}"),
                 modify_with(move |client_set| client_set.focus_tag(tag)),
             ),
             (
-                format!("A-S-{tag}"),
+                format!("M-S-{tag}"),
                 modify_with(move |client_set| client_set.move_focused_to_tag(tag)),
             ),
         ]);
