@@ -1,14 +1,3 @@
-//! penrose :: EWMH support
-//!
-//! It is possible to add EWMH support to penrose via an extension. This provides
-//! information to external utilities such as panels and statusbars so that they
-//! are able to interact with the window manager.
-//!
-//! `penrose::extensions::hooks::add_ewmh_hooks` can be used to compose the required
-//! hooks into your existing Config before starting the window manager. If you want
-//! to modify the support, each of the individual hooks can be found in
-//! `penrose::extensions::hooks::ewmh`.
-#[cfg(not(target_os = "macos"))]
 use penrose::x11rb::RustConn;
 use penrose::{
     Result,
@@ -34,9 +23,10 @@ use penrose::{
     },
     extensions::{
         actions::toggle_fullscreen,
-        hooks::{SpawnOnStartup, add_ewmh_hooks},
+        hooks::{NamedScratchPad, ToggleNamedScratchPad, add_named_scratchpads, manage::FloatingCentered, SpawnOnStartup, add_ewmh_hooks},
     },
     map, stack,
+    x::query::ClassName,
 };
 
 use penrose_ui::{bar::Position, core::TextStyle, status_bar};
@@ -51,10 +41,11 @@ const BLUE: u32 = 0x458588ff;
 const LAVENDER: u32 = 0xAA96DA;
 const BAR_HEIGHT_PX: u32 = 20;
 
-#[cfg(not(target_os = "macos"))]
-fn raw_key_bindings() -> HashMap<String, Box<dyn KeyEventHandler<RustConn>>> {
+fn raw_key_bindings(
+    toggle_1: ToggleNamedScratchPad,
+) -> HashMap<String, Box<dyn KeyEventHandler<RustConn>>> {
     let mut raw_bindings = map! {
-        map_keys: |k: &str| k.to_owned();
+        map_keys: |k: &str| k.to_string();
 
         "M-j" => modify_with(|cs| cs.focus_down()),
         "M-k" => modify_with(|cs| cs.focus_up()),
@@ -80,16 +71,18 @@ fn raw_key_bindings() -> HashMap<String, Box<dyn KeyEventHandler<RustConn>>> {
         "M-Return" => spawn("st"),
         "M-S-q" => exit(),
         "M-S-f" => toggle_fullscreen(),
+
+	"M-s" => Box::new(toggle_1),
     };
 
     for tag in &["1", "2", "3", "4", "5", "6", "7", "8", "9"] {
         raw_bindings.extend([
             (
-                format!("M-{tag}"),
+                format!("A-{tag}"),
                 modify_with(move |client_set| client_set.focus_tag(tag)),
             ),
             (
-                format!("M-S-{tag}"),
+                format!("A-S-{tag}"),
                 modify_with(move |client_set| client_set.move_focused_to_tag(tag)),
             ),
         ]);
@@ -98,7 +91,6 @@ fn raw_key_bindings() -> HashMap<String, Box<dyn KeyEventHandler<RustConn>>> {
     raw_bindings
 }
 
-#[cfg(not(target_os = "macos"))]
 fn mouse_bindings() -> HashMap<MouseState, Box<dyn MouseEventHandler<RustConn>>> {
     use penrose::core::bindings::{
         ModifierKey::{Meta, Shift},
@@ -126,22 +118,19 @@ pub fn layouts() -> LayoutStack {
         MainAndStack::side(max_main, ratio, ratio_step),
         ReflectHorizontal::wrap(MainAndStack::side(max_main, ratio, ratio_step)),
         MainAndStack::bottom(max_main, ratio, ratio_step),
-        Monocle::boxed(),
-        Grid::boxed()
+	Monocle::boxed(),
+	Grid::boxed()
     )
     .map(|layout| ReserveTop::wrap(Gaps::wrap(layout, outer_px, inner_px), top_px))
 }
 
-#[cfg(not(target_os = "macos"))]
 fn main() -> Result<()> {
     tracing_subscriber::fmt()
         .with_env_filter("trace")
         .finish()
         .init();
 
-    // This is all that is needed to add the required hooks to your config.
-    // SpawnOnStartup is being used here to start polybar so that the EWMH support
-    // can be demonstrated.
+
     let config = add_ewmh_hooks(Config {
         focused_border: LAVENDER.into(),
         normal_border: GREY.into(),
@@ -150,8 +139,16 @@ fn main() -> Result<()> {
         ..Config::default()
     });
 
+    let (nsp_1, toggle_1) = NamedScratchPad::new(
+        "terminal",
+        "st -c StScratchpad",
+        ClassName("StScratchpad"),
+        FloatingCentered::new(0.8, 0.8),
+        true,
+    );
+
     let conn = RustConn::new()?;
-    let key_bindings = parse_keybindings_with_xmodmap(raw_key_bindings())?;
+    let key_bindings = parse_keybindings_with_xmodmap(raw_key_bindings(toggle_1))?;
     let style = TextStyle {
         fg: WHITE.into(),
         bg: Some(BLACK.into()),
@@ -160,12 +157,15 @@ fn main() -> Result<()> {
 
     let bar = status_bar(BAR_HEIGHT_PX, FONT, 12, style, BLUE, GREY, Position::Top).unwrap();
 
+
     let wm = bar.add_to(WindowManager::new(
         config,
-        key_bindings,
+	key_bindings,
         mouse_bindings(),
         conn,
     )?);
+
+    let wm = add_named_scratchpads(wm, vec![nsp_1]);
 
     wm.run()
 
