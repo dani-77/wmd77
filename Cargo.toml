@@ -2,7 +2,7 @@
 name = "wmd77"
 version = "0.2.0"
 description = "Simple Tiling WM written with Penrose Libraries."
-authors = "Daniel Azevedo"
+authors = ["Daniel Azevedo", "dani-77 <daniazevedo77@posteo.net>"]
 edition = "2024"
 
 [dependencies]
