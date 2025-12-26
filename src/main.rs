@@ -22,6 +22,7 @@ use penrose::{
         layout::LayoutStack,
     },
     extensions::{
+	layout::{Fibonacci, Tatami},
         actions::toggle_fullscreen,
         hooks::{NamedScratchPad, ToggleNamedScratchPad, add_named_scratchpads, manage::FloatingCentered, SpawnOnStartup, add_ewmh_hooks},
     },
@@ -119,7 +120,9 @@ pub fn layouts() -> LayoutStack {
         ReflectHorizontal::wrap(MainAndStack::side(max_main, ratio, ratio_step)),
         MainAndStack::bottom(max_main, ratio, ratio_step),
 	Monocle::boxed(),
-	Grid::boxed()
+	Grid::boxed(),
+	Fibonacci::boxed_default(),
+	Tatami::boxed_default()
     )
     .map(|layout| ReserveTop::wrap(Gaps::wrap(layout, outer_px, inner_px), top_px))
 }
