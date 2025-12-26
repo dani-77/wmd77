@@ -1,6 +1,8 @@
 [package]
 name = "wmd77"
-version = "0.1.1"
+version = "0.2.0"
+description = "Simple Tiling WM written with Penrose Libraries."
+authors = "Daniel Azevedo"
 edition = "2024"
 
 [dependencies]
