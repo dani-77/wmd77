@@ -70,6 +70,8 @@ super + q -> kill focused window
 
 super + r -> gmrun
 
+super + s -> scratchpad
+
 super + t -> lock
 
 super + x -> powermenu
