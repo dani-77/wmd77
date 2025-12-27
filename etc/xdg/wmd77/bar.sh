@@ -23,7 +23,7 @@ bat() {
 
     [ -z "$time" ] && time="--:--"
 
-    printf "Battery: %s (%s) %s" "$percent" "$state" "$time"
+    printf "Battery: %s %s %s" "$percent" "$state" "$time"
 }
 
 status() {
@@ -39,26 +39,35 @@ status() {
     # CPU usage (use used instead of idle)
     CPU=$(top -bn1 | grep 'Cpu(s)' | awk '{print 100-$8"%"}')
     
-    # Wlan: ESSID + quality
-    IFACE=$(ls /sys/class/net | grep '^wl' | head -n1)
-    WLAN_STATE=""
-    WLAN=""
-    if [ -n "$IFACE" ]; then
-        WLAN_STATE=$(cat "/sys/class/net/$IFACE/operstate" 2>/dev/null)
-        if [ "$WLAN_STATE" = "up" ]; then
-            ESSID=$(iwgetid "$IFACE" --raw 2>/dev/null)
-            # Quality in %
-            QUALITY=$(iwconfig "$IFACE" 2>/dev/null | \
-                      awk '/Link Quality/ { split($2,a,"=|/"); printf "%d%%", (a[2]/a[3])*100 }')
-            [ -z "$ESSID" ] && ESSID="unknown"
-            [ -z "$QUALITY" ] && QUALITY="--"
-            WLAN="WiFi: $ESSID ($QUALITY)"
-        else
-            WLAN="WiFi: down"
-        fi
+    # Wlan: Simple
+    WLAN_STATE=$(cat /sys/class/net/wl*/operstate 2>/dev/null | head -1)
+    if [ "$WLAN_STATE" = "up" ]; then
+        WLAN="Connected"
     else
-        WLAN="WiFi: n/a"
+        WLAN="Disconnected"
     fi
+
+
+    # Wlan: ESSID + quality
+    #IFACE=$(ls /sys/class/net | grep '^wl' | head -n1)
+    #WLAN_STATE=""
+    #WLAN=""
+    #if [ -n "$IFACE" ]; then
+    #    WLAN_STATE=$(cat "/sys/class/net/$IFACE/operstate" 2>/dev/null)
+    #    if [ "$WLAN_STATE" = "up" ]; then
+    #        ESSID=$(iwgetid "$IFACE" --raw 2>/dev/null)
+            # Quality in %
+    #        QUALITY=$(iwconfig "$IFACE" 2>/dev/null | \
+    #                  awk '/Link Quality/ { split($2,a,"=|/"); printf "%d%%", (a[2]/a[3])*100 }')
+    #        [ -z "$ESSID" ] && ESSID="unknown"
+    #        [ -z "$QUALITY" ] && QUALITY="--"
+    #        WLAN="WiFi: $ESSID ($QUALITY)"
+    #    else
+    #        WLAN="WiFi: down"
+    #    fi
+    #else
+    #    WLAN="WiFi: n/a"
+    #fi
 
     # Volume
     VOLUME=$(amixer get Master | grep -o '[0-9]*%' | head -1)
