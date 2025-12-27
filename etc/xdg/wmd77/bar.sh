@@ -15,8 +15,8 @@ bat() {
 
     # Normalize state label
     case "$status" in
-        *Charging*)    state="+" ;;
-        *Discharging*) state="-" ;;
+        *Charging*)    state="  " ;;
+        *Discharging*) state="  " ;;
         *Full*)        state="Full" ;;
         *)             state="$status" ;;
     esac
@@ -49,24 +49,24 @@ status() {
 
 
     # Wlan: ESSID + quality
+    # Determine wifi interface (first wl* device)
     #IFACE=$(ls /sys/class/net | grep '^wl' | head -n1)
-    #WLAN_STATE=""
-    #WLAN=""
+
     #if [ -n "$IFACE" ]; then
-    #    WLAN_STATE=$(cat "/sys/class/net/$IFACE/operstate" 2>/dev/null)
-    #    if [ "$WLAN_STATE" = "up" ]; then
-    #        ESSID=$(iwgetid "$IFACE" --raw 2>/dev/null)
-            # Quality in %
-    #        QUALITY=$(iwconfig "$IFACE" 2>/dev/null | \
-    #                  awk '/Link Quality/ { split($2,a,"=|/"); printf "%d%%", (a[2]/a[3])*100 }')
-    #        [ -z "$ESSID" ] && ESSID="unknown"
-    #        [ -z "$QUALITY" ] && QUALITY="--"
-    #        WLAN="WiFi: $ESSID ($QUALITY)"
-    #    else
-    #        WLAN="WiFi: down"
-    #    fi
+    #WLAN_STATE=$(cat "/sys/class/net/$IFACE/operstate" 2>/dev/null)
+    #if [ "$WLAN_STATE" = "up" ]; then
+        # ESSID via nmcli
+    #    ESSID=$(nmcli -t -f ACTIVE,SSID dev wifi | awk -F: '$1=="yes"{print $2; exit}')
+        # Quality via nmcli (signal 0–100)
+    #    QUALITY=$(nmcli -t -f ACTIVE,SIGNAL dev wifi | awk -F: '$1=="yes"{print $2"%"; exit}')
+    #    [ -z "$ESSID" ] && ESSID="unknown"
+    #    [ -z "$QUALITY" ] && QUALITY="--"
+    #    WLAN="WiFi: $ESSID ($QUALITY)"
     #else
-    #    WLAN="WiFi: n/a"
+    #    WLAN="WiFi: down"
+    #fi
+    #else
+    #	WLAN="WiFi: n/a"
     #fi
 
     # Volume
