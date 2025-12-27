@@ -1,5 +1,4 @@
 #!/bin/bash
-#$(cat /sys/class/net/wl*/operstate 2>/dev/null)
 
 status() {
     # Date and time
