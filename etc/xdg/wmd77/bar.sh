@@ -42,9 +42,9 @@ status() {
     # Wlan: Simple
     WLAN_STATE=$(cat /sys/class/net/wl*/operstate 2>/dev/null | head -1)
     if [ "$WLAN_STATE" = "up" ]; then
-        WLAN="Connected"
+        WLAN1="  Connected"
     else
-        WLAN="Disconnected"
+        WLAN1="  Disconnected"
     fi
 
 
@@ -76,7 +76,7 @@ status() {
     BATTERY_INFO=$(bat)
     
     # Combine all info with prefixes
-    echo "$WEATHER | CPU: $CPU | $MEMORY | $WLAN | Volume: $VOLUME | $BATTERY_INFO | $DATE"
+    echo "$WEATHER | CPU: $CPU | $MEMORY | $WLAN1 | Volume: $VOLUME | $BATTERY_INFO | $DATE"
 }
 
 while true; do
