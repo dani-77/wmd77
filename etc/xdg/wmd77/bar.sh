@@ -50,24 +50,24 @@ status() {
 
     # Wlan: ESSID + quality
     # Determine wifi interface (first wl* device)
-    #IFACE=$(ls /sys/class/net | grep '^wl' | head -n1)
+    IFACE=$(ls /sys/class/net | grep '^wl' | head -n1)
 
-    #if [ -n "$IFACE" ]; then
-    #WLAN_STATE=$(cat "/sys/class/net/$IFACE/operstate" 2>/dev/null)
-    #if [ "$WLAN_STATE" = "up" ]; then
+    if [ -n "$IFACE" ]; then
+    WLAN_STATE=$(cat "/sys/class/net/$IFACE/operstate" 2>/dev/null)
+    if [ "$WLAN_STATE" = "up" ]; then
         # ESSID via nmcli
-    #    ESSID=$(nmcli -t -f ACTIVE,SSID dev wifi | awk -F: '$1=="yes"{print $2; exit}')
+        ESSID=$(nmcli -t -f ACTIVE,SSID dev wifi | awk -F: '$1=="yes"{print $2; exit}')
         # Quality via nmcli (signal 0–100)
-    #    QUALITY=$(nmcli -t -f ACTIVE,SIGNAL dev wifi | awk -F: '$1=="yes"{print $2"%"; exit}')
-    #    [ -z "$ESSID" ] && ESSID="unknown"
-    #    [ -z "$QUALITY" ] && QUALITY="--"
-    #    WLAN="WiFi: $ESSID ($QUALITY)"
-    #else
-    #    WLAN="WiFi: down"
-    #fi
-    #else
-    #	WLAN="WiFi: n/a"
-    #fi
+        QUALITY=$(nmcli -t -f ACTIVE,SIGNAL dev wifi | awk -F: '$1=="yes"{print $2"%"; exit}')
+        [ -z "$ESSID" ] && ESSID="unknown"
+        [ -z "$QUALITY" ] && QUALITY="--"
+        WLAN2="WiFi: $ESSID ($QUALITY)"
+    else
+        WLAN2="WiFi: down"
+    fi
+    else
+    	WLAN2="WiFi: n/a"
+    fi
 
     # Volume
     VOLUME=$(amixer get Master | grep -o '[0-9]*%' | head -1)
