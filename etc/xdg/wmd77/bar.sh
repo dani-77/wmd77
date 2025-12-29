@@ -27,17 +27,30 @@ bat() {
 }
 
 status() {
+
+    # Battery
+    BATTERY_INFO=$(bat)
+    
+    # CPU usage (use used instead of idle)
+    CPU=$(top -bn1 | grep 'Cpu(s)' | awk '{print 100-$8"%"}')
+
     # Date and time
     DATE=$(date '+%a %d %b %Y, %H:%M')
-    
-    # Weather
-    WEATHER=$(curl -s wttr.in/?format=1 | awk '{ print $2 }')
 
     # Memory usage
     MEMORY=$(free -m | grep '^Mem' | awk '{print "Mem: " $3 "MB/" $2 "MB"}')
     
-    # CPU usage (use used instead of idle)
-    CPU=$(top -bn1 | grep 'Cpu(s)' | awk '{print 100-$8"%"}')
+    # Updates
+    # Void
+    VOID_UPDATES=$(timeout 20 xbps-intall -unM 2>/dev/null | wc -l)
+    ARCH_UPDATES=$(timeout 20 checkupdates 2>/dev/null | wc -l)
+    DEB_UPDATES=$(timeout 20 aptitude search '~U' 2>/dev/null | wc -l)
+
+    # Volume
+    VOLUME=$(amixer get Master | grep -o '[0-9]*%' | head -1)
+    
+    # Weather
+    WEATHER=$(curl -s wttr.in/?format=1 | awk '{ print $2 }')
     
     # Wlan: Simple
     WLAN_STATE=$(cat /sys/class/net/wl*/operstate 2>/dev/null | head -1)
@@ -46,7 +59,6 @@ status() {
     else
         WLAN1="Disconnected"
     fi
-
 
     # Wlan: ESSID + quality
     # Determine wifi interface (first wl* device)
@@ -69,14 +81,8 @@ status() {
     	WLAN2="WiFi: n/a"
     fi
 
-    # Volume
-    VOLUME=$(amixer get Master | grep -o '[0-9]*%' | head -1)
-    
-    # Battery
-    BATTERY_INFO=$(bat)
-    
     # Combine all info with prefixes
-    echo "$WEATHER | CPU: $CPU | $MEMORY | $WLAN1 | Volume: $VOLUME | $BATTERY_INFO | $DATE"
+    echo "UPD: $VOID_UPDATES | $WEATHER | CPU: $CPU | $MEMORY | $WLAN1 | Volume: $VOLUME | $BATTERY_INFO | $DATE"
 }
 
 while true; do
