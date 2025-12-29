@@ -56,9 +56,9 @@ status() {
     WLAN_STATE=$(cat "/sys/class/net/$IFACE/operstate" 2>/dev/null)
     if [ "$WLAN_STATE" = "up" ]; then
         # ESSID via nmcli
-        ESSID=$(nmcli -t -f ACTIVE,SSID dev wifi | awk -F: '$1=="yes"{print $2; exit}')
+        ESSID=$(nmcli -t -f IN-USE,SSID dev wifi | awk -F: '$1=="*"{print $2; exit}')
         # Quality via nmcli (signal 0–100)
-        QUALITY=$(nmcli -t -f ACTIVE,SIGNAL dev wifi | awk -F: '$1=="yes"{print $2"%"; exit}')
+        QUALITY=$(nmcli -t -f IN-USE,SIGNAL dev wifi | awk -F: '$1=="*"{print $2"%"; exit}')
         [ -z "$ESSID" ] && ESSID="unknown"
         [ -z "$QUALITY" ] && QUALITY="--"
         WLAN2="WiFi: $ESSID ($QUALITY)"
