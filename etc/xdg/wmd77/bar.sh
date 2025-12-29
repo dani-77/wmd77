@@ -15,15 +15,15 @@ bat() {
 
     # Normalize state label
     case "$status" in
-        *Charging*)    state="  " ;;
-        *Discharging*) state="  " ;;
+        *Charging*)    state="+++" ;;
+        *Discharging*) state="Remaining" ;;
         *Full*)        state="Full" ;;
         *)             state="$status" ;;
     esac
 
     [ -z "$time" ] && time="--:--"
 
-    printf "Battery: %s %s %s" "$percent" "$state" "$time"
+    printf "Battery: %s %s %s" "$percent" "($state)" "$time"
 }
 
 status() {
@@ -42,9 +42,9 @@ status() {
     # Wlan: Simple
     WLAN_STATE=$(cat /sys/class/net/wl*/operstate 2>/dev/null | head -1)
     if [ "$WLAN_STATE" = "up" ]; then
-        WLAN1="  Connected"
+        WLAN1="Connected"
     else
-        WLAN1="  Disconnected"
+        WLAN1="Disconnected"
     fi
 
 
