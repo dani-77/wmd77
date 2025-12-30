@@ -6,4 +6,5 @@ udiskie -a &
 xcompmgr -c -f -n &
 xautolock -time 5 -locker slock &
 redshift -l 41.16:-8.62 &
+sxhkd -c ~/.config/sxhkd/sxhkdrc &
 sh /etc/xdg/wmd77/bar.sh
