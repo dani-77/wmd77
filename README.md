@@ -24,6 +24,8 @@ This is my Penrose based X11 Tiling Window Manager.
 
 - slock
 
+- sxhkd
+
 - udiskie
 
 - xautolock
@@ -56,25 +58,15 @@ Eventhough you can swap any of it, by default:
 
 super + return -> st (terminal)
 
-super + a -> rofi
-
 super + d -> dmenu
 
 super + j/k -> swap focused window
 
 super + m -> change layout
 
-super + p -> scrot
-
 super + q -> kill focused window
 
-super + r -> gmrun
-
 super + s -> scratchpad
-
-super + t -> lock
-
-super + x -> powermenu
 
 super + shift + q -> quit WM
 
