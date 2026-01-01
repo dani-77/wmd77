@@ -1,6 +1,6 @@
 use penrose::x11rb::RustConn;
 use penrose::{
-    Result,
+    Result, manage_hooks, 
     builtin::{
         actions::{
             exit,
@@ -24,7 +24,7 @@ use penrose::{
     extensions::{
 	layout::{Fibonacci, Tatami},
         actions::toggle_fullscreen,
-        hooks::{NamedScratchPad, ToggleNamedScratchPad, add_named_scratchpads, manage::FloatingCentered, SpawnOnStartup, add_ewmh_hooks},
+        hooks::{NamedScratchPad, ToggleNamedScratchPad, add_named_scratchpads, manage::{SetWorkspace, FloatingCentered}, SpawnOnStartup, add_ewmh_hooks},
     },
     map, stack,
     x::query::ClassName,
@@ -129,11 +129,23 @@ fn main() -> Result<()> {
         .finish()
         .init();
 
+let my_manage_hook = manage_hooks! {
+    ClassName("gimp") => SetWorkspace("3"),
+    ClassName("deadbeef") => SetWorkspace("5"),
+    ClassName("mpv") => SetWorkspace("5"),
+    ClassName("ncspot") => SetWorkspace("5"),
+    ClassName("spotify") => SetWorkspace("5"),
+    ClassName("thunderbird") => SetWorkspace("9"),
+    ClassName("chromium") => SetWorkspace("9"),
+    ClassName("firefox") => SetWorkspace("9"),
+    ClassName("qutebrowser") => SetWorkspace("9"),
+};
 
     let config = add_ewmh_hooks(Config {
         focused_border: LAVENDER.into(),
         normal_border: GREY.into(),
         default_layouts: layouts(),
+	manage_hook: Some(my_manage_hook),
         startup_hook: Some(SpawnOnStartup::boxed("/etc/xdg/wmd77/startup.sh")),
         ..Config::default()
     });
