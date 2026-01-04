@@ -41,7 +41,6 @@ status() {
     MEMORY=$(free -m | grep '^Mem' | awk '{print "Mem: " $3 "MB/" $2 "MB"}')
     
     # Updates
-    # Void
     VOID_UPDATES=$(timeout 20 xbps-install -unM 2>/dev/null | wc -l)
     ARCH_UPDATES=$(timeout 20 checkupdates 2>/dev/null | wc -l)
     DEB_UPDATES=$(timeout 20 aptitude search '~U' 2>/dev/null | wc -l)
