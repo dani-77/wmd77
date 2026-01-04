@@ -125,16 +125,16 @@ pub fn logout_menu() -> KeyHandler {
         if let Ok(MenuMatch::Line(_, choice)) = dmenu.build_menu(choices) {
             match choice.as_str() {
                 "󰒲  suspend" => {
-                    spawn_cmd("loginctl suspend");
+                    let _ = spawn_cmd("loginctl suspend");
                 }
                 "󰍃  logout" => {
-                    spawn_cmd("kill -9 -1");
+                    let _ = spawn_cmd("kill -9 -1");
                 }
                 "󰤆  shutdown" => {
-                    spawn_cmd("loginctl poweroff");
+                    let _ = spawn_cmd("loginctl poweroff");
                 }
                 "󱞳  reboot" => {
-                    spawn_cmd("loginctl reboot");
+                    let _ = spawn_cmd("loginctl reboot");
                 }
                 _ => {}
             }
