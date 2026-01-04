@@ -3,9 +3,9 @@ use penrose::{
     Result, manage_hooks, 
     builtin::{
         actions::{
-            exit,
+            exit, key_handler,
             floating::{MouseDragHandler, MouseResizeHandler, sink_focused},
-            log_current_state, modify_with, send_layout_message, spawn,
+            log_current_state, modify_with, send_layout_message, spawn as spawn_action,
         },
         layout::{
             MainAndStack, Monocle, Grid,
@@ -22,10 +22,12 @@ use penrose::{
         layout::LayoutStack,
     },
     extensions::{
+	util::dmenu::{DMenu, DMenuConfig, MenuMatch},
 	layout::{Fibonacci, Tatami},
-        actions::toggle_fullscreen,
+        actions::toggle_fullscreen, 
         hooks::{NamedScratchPad, ToggleNamedScratchPad, add_named_scratchpads, manage::{SetWorkspace, FloatingCentered}, SpawnOnStartup, add_ewmh_hooks},
     },
+    util::spawn as spawn_cmd,
     map, stack,
     x::query::ClassName,
 };
@@ -33,6 +35,7 @@ use penrose::{
 use penrose_ui::{bar::Position, core::TextStyle, status_bar};
 use std::collections::HashMap;
 use tracing_subscriber::{self, prelude::*};
+type KeyHandler = Box<dyn KeyEventHandler<RustConn>>;
 
 const FONT: &str = "Iosevka";
 const BLACK: u32 = 0x282828ff;
@@ -44,8 +47,8 @@ const BAR_HEIGHT_PX: u32 = 20;
 
 fn raw_key_bindings(
     toggle_1: ToggleNamedScratchPad,
-) -> HashMap<String, Box<dyn KeyEventHandler<RustConn>>> {
-    let mut raw_bindings = map! {
+) -> HashMap<String, KeyHandler>{
+  let mut raw_bindings = map! {
         map_keys: |k: &str| k.to_string();
 
         "M-j" => modify_with(|cs| cs.focus_down()),
@@ -62,13 +65,14 @@ fn raw_key_bindings(
         "M-Down" => send_layout_message(|| IncMain(-1)),
         "M-Right" => send_layout_message(|| ExpandMain),
         "M-Left" => send_layout_message(|| ShrinkMain),
-        "M-d" => spawn("dmenu_run"),
-        "M-t" => spawn("slock"),
+        "M-d" => spawn_action("dmenu_run"),
+        "M-t" => spawn_action("slock"),
         "M-S-s" => log_current_state(),
-        "M-Return" => spawn("st"),
-        "M-S-q" => exit(),
+        "M-Return" => spawn_action("st"),
         "M-S-f" => toggle_fullscreen(),
 
+        "M-S-q" => exit(),
+	"M-x" => logout_menu(),
 	"M-s" => Box::new(toggle_1),
     };
 
@@ -101,6 +105,40 @@ fn mouse_bindings() -> HashMap<MouseState, Box<dyn MouseEventHandler<RustConn>>>
         (Right, vec![Shift, Meta]) => MouseResizeHandler::boxed_default(),
         (Middle, vec![Shift, Meta]) => click_handler(sink_focused()),
     }
+}
+
+pub fn logout_menu() -> KeyHandler {
+    key_handler(|state, _x| {
+        let choices = vec!["logout", "shutdown", "reboot"];
+
+        let config = DMenuConfig {
+            ignore_case: true,
+            show_line_numbers: false,
+            show_on_bottom: false,
+            password_input: false,
+            ..DMenuConfig::default()
+        };
+
+        let screen_index = state.client_set.current_screen().index();
+        let dmenu = DMenu::new(&config, screen_index);
+
+        if let Ok(MenuMatch::Line(_, choice)) = dmenu.build_menu(choices) {
+            match choice.as_str() {
+                "logout" => {
+                    spawn_cmd("kill -9 -1");
+                }
+                "shutdown" => {
+                    spawn_cmd("loginctl poweroff");
+                }
+                "reboot" => {
+                    spawn_cmd("loginctl reboot");
+                }
+                _ => {}
+            }
+        }
+
+        Ok(())
+    })
 }
 
 pub fn layouts() -> LayoutStack {
@@ -168,7 +206,6 @@ let my_manage_hook = manage_hooks! {
 
     let bar = status_bar(BAR_HEIGHT_PX, FONT, 12, style, BLUE, GREY, Position::Top).unwrap();
 
-
     let wm = bar.add_to(WindowManager::new(
         config,
 	key_bindings,
@@ -181,3 +218,4 @@ let my_manage_hook = manage_hooks! {
     wm.run()
 
 }
+
