@@ -22,8 +22,8 @@ use penrose::{
         layout::LayoutStack,
     },
     extensions::{
-	util::dmenu::{DMenu, DMenuConfig, MenuMatch},
-	layout::{Fibonacci, Tatami},
+    	util::dmenu::{DMenu, DMenuConfig, MenuMatch},
+    	layout::{Fibonacci, Tatami},
         actions::toggle_fullscreen, 
         hooks::{NamedScratchPad, ToggleNamedScratchPad, add_named_scratchpads, manage::{SetWorkspace, FloatingCentered}, SpawnOnStartup, add_ewmh_hooks},
     },
@@ -72,8 +72,8 @@ fn raw_key_bindings(
         "M-S-f" => toggle_fullscreen(),
 
         "M-S-q" => exit(),
-	"M-x" => logout_menu(),
-	"M-s" => Box::new(toggle_1),
+	    "M-x" => logout_menu(),
+	    "M-s" => Box::new(toggle_1),
     };
 
     for tag in &["1", "2", "3", "4", "5", "6", "7", "8", "9"] {
@@ -109,7 +109,7 @@ fn mouse_bindings() -> HashMap<MouseState, Box<dyn MouseEventHandler<RustConn>>>
 
 pub fn logout_menu() -> KeyHandler {
     key_handler(|state, _x| {
-        let choices = vec!["logout", "shutdown", "reboot"];
+        let choices = vec!["󰒲  suspend", "󰍃  logout", "󱞳  reboot", "󰤆  shutdown"];
 
         let config = DMenuConfig {
             ignore_case: true,
@@ -124,13 +124,16 @@ pub fn logout_menu() -> KeyHandler {
 
         if let Ok(MenuMatch::Line(_, choice)) = dmenu.build_menu(choices) {
             match choice.as_str() {
-                "logout" => {
+                "󰒲  suspend" => {
+                    spawn_cmd("loginctl suspend");
+                }
+                "󰍃  logout" => {
                     spawn_cmd("kill -9 -1");
                 }
-                "shutdown" => {
+                "󰤆  shutdown" => {
                     spawn_cmd("loginctl poweroff");
                 }
-                "reboot" => {
+                "󱞳  reboot" => {
                     spawn_cmd("loginctl reboot");
                 }
                 _ => {}
@@ -153,10 +156,10 @@ pub fn layouts() -> LayoutStack {
         MainAndStack::side(max_main, ratio, ratio_step),
         ReflectHorizontal::wrap(MainAndStack::side(max_main, ratio, ratio_step)),
         MainAndStack::bottom(max_main, ratio, ratio_step),
-	Monocle::boxed(),
-	Grid::boxed(),
-	Fibonacci::boxed_default(),
-	Tatami::boxed_default()
+    	Monocle::boxed(),
+    	Grid::boxed(),
+    	Fibonacci::boxed_default(),
+	    Tatami::boxed_default()
     )
     .map(|layout| ReserveTop::wrap(Gaps::wrap(layout, outer_px, inner_px), top_px))
 }
@@ -183,7 +186,7 @@ let my_manage_hook = manage_hooks! {
         focused_border: LAVENDER.into(),
         normal_border: GREY.into(),
         default_layouts: layouts(),
-	manage_hook: Some(my_manage_hook),
+	    manage_hook: Some(my_manage_hook),
         startup_hook: Some(SpawnOnStartup::boxed("/etc/xdg/wmd77/startup.sh")),
         ..Config::default()
     });
@@ -208,7 +211,7 @@ let my_manage_hook = manage_hooks! {
 
     let wm = bar.add_to(WindowManager::new(
         config,
-	key_bindings,
+	    key_bindings,
         mouse_bindings(),
         conn,
     )?);
