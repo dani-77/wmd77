@@ -31,13 +31,13 @@ so sure because Penrose_ui lib only has Volume, Date & Time, Wifi and Battery st
 
 ## Running Dependencies
 
+- dbus
+
 - dmenu
 
 - st 
 
 ### Optional dependencies
-
-- dbus
 
 - dunst
 
