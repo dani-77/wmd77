@@ -2,7 +2,7 @@
 Version=1.0
 Name=wmd77
 Comment=Simple WM built with Penrose
-Exec=wmd77
+Exec=dbus-launch wmd77
 Icon=/usr/share/pixmaps/wmd77.png
 Type=Application
 DesktopNames=wmd77

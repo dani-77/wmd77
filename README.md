@@ -37,6 +37,10 @@ so sure because Penrose_ui lib only has Volume, Date & Time, Wifi and Battery st
 
 ### Optional dependencies
 
+- dbus
+
+- dunst
+
 - feh
 
 - redshift
