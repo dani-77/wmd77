@@ -15,7 +15,7 @@ bat() {
 
     # Normalize state label
     case "$status" in
-        *Charging*)    state="+++" ;;
+        *Charging*)    state="Until Charged" ;;
         *Discharging*) state="Remaining" ;;
         *Full*)        state="Full" ;;
         *)             state="$status" ;;
@@ -23,14 +23,14 @@ bat() {
 
     [ -z "$time" ] && time="--:--"
 
-    printf "Battery: %s %s %s" "$percent" "($state)" "$time"
+    printf "Battery: %s %s %s" "$percent" "$time" "$state"
 }
 
 status() {
 
     # Battery
     BATTERY_INFO=$(bat)
-    
+
     # CPU usage (use used instead of idle)
     CPU=$(top -bn1 | grep 'Cpu(s)' | awk '{print 100-$8"%"}')
 
@@ -39,7 +39,7 @@ status() {
 
     # Memory usage
     MEMORY=$(free -m | grep '^Mem' | awk '{print "Mem: " $3 "MB/" $2 "MB"}')
-    
+
     # Updates
     VOID_UPDATES=$(timeout 20 xbps-install -unM 2>/dev/null | wc -l)
     ARCH_UPDATES=$(timeout 20 checkupdates 2>/dev/null | wc -l)
@@ -47,10 +47,10 @@ status() {
 
     # Volume
     VOLUME=$(amixer get Master | grep -o '[0-9]*%' | head -1)
-    
+
     # Weather
     WEATHER=$(curl -s wttr.in/?format=1 | awk '{ print $2 }')
-    
+
     # Wlan: Simple
     WLAN_STATE=$(cat /sys/class/net/wl*/operstate 2>/dev/null | head -1)
     if [ "$WLAN_STATE" = "up" ]; then
