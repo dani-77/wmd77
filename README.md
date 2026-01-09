@@ -72,7 +72,7 @@ And then run the package:
 $ target/release/./wmd77
 ```
 
-To install:
+To install widely:
 
 ```
 $ sudo make install
