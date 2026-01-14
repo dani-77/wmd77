@@ -114,6 +114,7 @@ pub fn logout_menu() -> KeyHandler {
         let config = DMenuConfig {
             ignore_case: true,
             show_line_numbers: false,
+            custom_prompt: Some("Power Menu".to_string()),
             show_on_bottom: false,
             password_input: false,
             ..DMenuConfig::default()
