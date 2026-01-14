@@ -16,12 +16,6 @@ Since the first release, I've added a few things, namely:
 
 - A session menu to logout, reboot and shutdown (requires dmenu).
 
-## WIP
-
-A status bar implementation that won't need the script to return info; about that I am not 
-so sure because Penrose_ui lib only has Volume, Date & Time, Wifi and Battery states and usually 
-I like to have more info on my bar.
-
 ## Build Dependencies
 
 - cargo & rust
